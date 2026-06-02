@@ -5,4 +5,4 @@ metadata:
 spec:
   containers:
   - name: nginx-1
-    image: httpd:2.4
+    image: nginx:latest
