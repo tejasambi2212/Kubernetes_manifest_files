@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: node-selector
+spec:
+  nodeSelector:
+    env: stage
+  containers:
+    - name: petclinic-app
+      image: nginx:latest
+      ports:
+        - containerPort: 9966

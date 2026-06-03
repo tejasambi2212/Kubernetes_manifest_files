@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: anti-virus
+spec:
+  selector:
+    matchLabels:
+      app: anti-virus
+  template:
+    metadata:
+      labels:
+        app: anti-virus
+    spec:
+      containers:
+      - name: anti-virus
+        image: nginx:latest
+        ports:
+        - containerPort: 80
