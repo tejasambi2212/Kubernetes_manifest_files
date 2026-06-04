@@ -1,0 +1,5 @@
+{
+    "yaml.schemas": {
+        "kubernetes://schema/v1@service": "file:///e%3A/Study/Kuberneties/yaml_files/part2/service.yaml"
+    }
+}

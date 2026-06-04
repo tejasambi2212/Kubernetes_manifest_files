@@ -12,6 +12,13 @@ spec:
       labels:
         app: tejas
     spec:
+      nodeSelector:
+        env: prod
+      tolarations:
+      - key: "workload"
+        operator: "Equal"
+        value: "database"
+        effect: "NoSchedule"
       containers:
       - name: tejas
         image: nginx:latest
