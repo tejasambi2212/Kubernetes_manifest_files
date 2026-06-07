@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: petclinic-app
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: petclinic
@@ -17,6 +17,10 @@ spec:
         image: httpd:latest
         ports:
         - containerPort: 80
+        resources:
+          requests:
+            cpu: "10m"
+            memory: "20Mi"
 
 ---
 apiVersion: v1
@@ -31,24 +35,17 @@ spec:
       port: 80
       targetPort: 80
   type: ClusterIP
-  
+
 --- 
-
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+ 
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
 metadata:
-  name: petclinic-app-ingress
+  name: petclinic-app-vpa
 spec:
-  ingressClassName: traefik  
-  rules:
-  - host: www.petclinic-app.com
-    http:
-      paths:
-      - pathType: Prefix
-        path: "/"
-        backend:
-          service:
-            name: petclinic-service
-            port:
-              number: 80
-
+  targetRef:
+    apiVersion: "apps/v1"
+    kind:       Deployment
+    name:       petclinic-app
+  updatePolicy:
+    updateMode: "Recreate"  

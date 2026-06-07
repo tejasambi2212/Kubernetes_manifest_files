@@ -1,72 +1,33 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: tejas-backend-service
-spec:
-  selector:
-    app: backend-tejas
-  ports:
-    - protocol: TCP
-      port: 8080
-      targetPort: 80
-  type: ClusterIP
-
---- 
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tejas-backend-pod-deployment
+  name: petclinic-app
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: backend-tejas
+      app: petclinic
   template:
     metadata:
       labels:
-        app: backend-tejas
+        app: petclinic 
     spec:
       containers:
-      - name: backend-tejas
+      - name: petclinic
         image: httpd:latest
         ports:
         - containerPort: 80
 
-
---- 
-
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: tejas-frontend-service
+  name: petclinic-service
 spec:
   selector:
-    app: frontend-tejas
+    app: petclinic
   ports:
     - protocol: TCP
       port: 80
       targetPort: 80
   type: ClusterIP
-
---- 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: tejas-frontend-pod-deployment
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: frontend-tejas
-  template:
-    metadata:
-      labels:
-        app: frontend-tejas
-    spec:
-      containers:
-      - name: frontend-tejas
-        image: nginx:latest
-        ports:
-        - containerPort: 80
-
