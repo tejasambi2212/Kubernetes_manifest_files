@@ -1,13 +1,16 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: test1
+  name: myapp-pod
 spec:
+  restartPolicy: Always
   containers:
-  - command:
-    - ping
-    - -c
-    - "50"
-    - google.com
-    image: busybox
-    name: test1
+  - name: test
+    image: busybox:latest
+    ports:
+    - containerPort: 80
+      name: http
+    - containerPort: 443
+      name: https
+    commands: ["/bin/sh", "-c"] ##this is entrypoint in docker image, this can be overridden by command in kubernetes
+    args: ["echo Hello, World!"] ##this is CMD in docker image, this can be overridden by args in kubernetes

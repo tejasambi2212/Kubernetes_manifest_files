@@ -1,0 +1,86 @@
+##This is deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+spec:
+  replicas: 3
+
+  selector:
+    matchLabels:
+      app: myapp
+
+  template:
+    metadata:
+      labels:
+        app: myapp
+
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+
+        ports:
+        - containerPort: 80
+
+---
+###THis is service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service
+
+spec:
+  selector:
+    app: myapp
+
+  ports:
+  - port: 80
+    targetPort: 80
+
+
+---
+
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: envoy
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+
+---
+#Thsis gateway
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+
+metadata:
+  name: prod-gateway
+
+spec:
+  gatewayClassName: envoy
+
+  listeners:
+  - name: http
+    protocol: HTTP
+    port: 80
+
+---
+#This is httproutepod
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+
+metadata:
+  name: myapp-route
+
+spec:
+  parentRefs:
+  - name: prod-gateway
+
+  hostnames:
+  - myapp.example.com
+
+  rules:
+  - backendRefs:
+    - name: myapp-service
+      port: 80
